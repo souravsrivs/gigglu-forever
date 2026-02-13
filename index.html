@@ -1,235 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gigglu ❤️ Forever</title>
-
-<style>
-*{
-touch-action:manipulation;
--webkit-tap-highlight-color: transparent;
-}
-
-body{
-margin:0;
-overflow:hidden;
-background:black;
-font-family:Arial,sans-serif;
-color:white;
-text-align:center;
-position:relative;
-}
-
-/* Galaxy */
-canvas{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-z-index:0;
-pointer-events:none;
-}
-
-/* Section */
-.section{
-position:relative;
-width:100%;
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-z-index:100; /* Increased */
-}
-
-/* Buttons */
-button{
-padding:12px 25px;
-border-radius:30px;
-border:none;
-font-size:16px;
-cursor:pointer;
-margin:10px;
-background:#ff2e63;
-color:white;
-transition:0.3s;
-position:relative;
-z-index:200; /* VERY IMPORTANT */
-}
-
-/* YES Glow */
-@keyframes glowYes{
-0%{box-shadow:0 0 10px #ff2e63;}
-100%{box-shadow:0 0 40px #ff2e63,0 0 80px #ff2e63;}
-}
-.glow{
-animation:glowYes 1s infinite alternate;
-transform:scale(1.2);
-}
-
-/* Shake */
-@keyframes shake{
-0%{transform:translate(0);}
-20%{transform:translate(-10px,5px);}
-40%{transform:translate(10px,-5px);}
-60%{transform:translate(-10px,5px);}
-80%{transform:translate(10px,-5px);}
-100%{transform:translate(0);}
-}
-.shake{animation:shake 0.5s;}
-
-/* Shatter */
-@keyframes shatter{
-0%{transform:scale(1);opacity:1;}
-100%{transform:scale(0) rotate(45deg);opacity:0;}
-}
-.shatter{animation:shatter 0.6s forwards;}
-
-/* Floating Bengali text */
-#noMessage{
-position:absolute;
-top:65%;
-left:50%;
-transform:translateX(-50%);
-font-size:20px;
-font-weight:bold;
-opacity:0;
-transition:opacity 0.4s;
-z-index:300;
-}
-
-/* Photos */
-.photo{
-position:absolute;
-width:110px;
-height:110px;
-object-fit:cover;
-border-radius:12px;
-transition:all 0.4s ease;
-z-index:5;
-}
-.dim{opacity:0.15 !important;}
-.zoom{
-transform:scale(2.5);
-z-index:100 !important;
-box-shadow:0 0 40px white;
-}
-
-/* Diamond */
-#diamondContainer{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-width:160px;
-height:160px;
-z-index:6;
-display:none;
-pointer-events:none;
-}
-.diamond{
-width:150px;
-height:150px;
-background:linear-gradient(145deg,#ffffff,#cfcfff);
-clip-path:polygon(50% 0%,100% 35%,80% 100%,20% 100%,0% 35%);
-animation:spin 6s linear infinite;
-}
-@keyframes spin{
-0%{transform:rotateY(0deg) rotateX(0deg);}
-100%{transform:rotateY(360deg) rotateX(360deg);}
-}
-
-/* Journey */
-#journey{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-width:85%;
-max-width:600px;
-padding:25px;
-display:none;
-z-index:30;
-opacity:0;
-transition:opacity 1s ease;
-background:rgba(0,0,0,0.85);
-border-radius:20px;
-cursor:grab;
-overflow:hidden;
-}
-
-/* Heartbeat */
-@keyframes heartbeat{
-0%{transform:scale(1);}
-25%{transform:scale(1.02);}
-50%{transform:scale(1);}
-75%{transform:scale(1.02);}
-100%{transform:scale(1);}
-}
-.heartbeat{
-animation:heartbeat 1.2s infinite;
-}
-
-#journeyHeader{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:10px;
-}
-
-#toggleBtn{
-background:#444;
-padding:5px 10px;
-border-radius:10px;
-font-size:14px;
-}
-
-#counter{
-position:absolute;
-bottom:20px;
-width:100%;
-font-size:18px;
-z-index:400;
-}
-</style>
-</head>
-
-<body>
-
-<canvas id="stars"></canvas>
-
-<div class="section" id="mainSection">
-<h1>Will You Be My Valentine, Gigglu? ❤️</h1>
-<button id="yesBtn">YES 💘</button>
-<button id="noBtn">No 😒</button>
-<div id="noMessage"></div>
-</div>
-
-<div id="diamondContainer">
-<div class="diamond"></div>
-</div>
-
-<div id="journey">
-<div id="journeyHeader">
-<h3>Our Journey ❤️</h3>
-<button id="toggleBtn">—</button>
-</div>
-<div id="journeyContent">
-<p id="journeyText"></p>
-</div>
-</div>
-
-<div id="counter"></div>
-
-<audio id="music">
-<source src="romantic.mp3" type="audio/mp3">
-</audio>
-
 <script>
 
-/* 🔥 IMPORTANT MOBILE FIX */
 document.addEventListener("DOMContentLoaded", function(){
 
 const yesBtn = document.getElementById("yesBtn");
@@ -248,14 +18,31 @@ yesBtn.addEventListener("click", function(){
 mainSection.style.display="none";
 yesBtn.classList.add("glow");
 confetti();
-music.play();
+music.play().catch(()=>{}); // mobile safe
 launchPhotos();
 diamondContainer.style.display="block";
 showJourney();
 startCounter();
 });
 
-/* NO */
+/* Confetti */
+function confetti(){
+for(let i=0;i<200;i++){
+let c=document.createElement("div");
+c.style.position="fixed";
+c.style.width="6px";
+c.style.height="6px";
+c.style.background=["#ff2e63","#fff","#ffcc00"][Math.floor(Math.random()*3)];
+c.style.left=Math.random()*100+"vw";
+c.style.top=Math.random()*100+"vh";
+c.style.zIndex="200";
+document.body.appendChild(c);
+c.animate([{transform:"translateY(0)",opacity:1},{transform:"translateY(300px)",opacity:0}],{duration:2000});
+setTimeout(()=>c.remove(),2000);
+}
+}
+
+/* NO logic */
 let noCount=0;
 const lines=[
 "Birokto 🙄",
@@ -285,10 +72,118 @@ noMessage.style.opacity="1";
 }
 });
 
+/* Photos */
+function launchPhotos(){
+for(let i=1;i<=38;i++){
+let img=document.createElement("img");
+img.src="photo"+i+".jpg";
+img.classList.add("photo");
+document.body.appendChild(img);
+img.onmouseenter=()=>focus(img);
+img.onmouseleave=reset;
+img.ontouchstart=()=>focus(img);
+img.ontouchend=reset;
+}
+setTimeout(arrangePhotos,500);
+}
+
+function arrangePhotos(){
+let photos=document.querySelectorAll(".photo");
+let cols=6;
+let spacingX=window.innerWidth/cols;
+let spacingY=window.innerHeight/7;
+photos.forEach((img,i)=>{
+img.style.left=(i%cols)*spacingX+"px";
+img.style.top=Math.floor(i/cols)*spacingY+"px";
+});
+}
+
+function focus(sel){
+document.querySelectorAll(".photo").forEach(p=>{if(p!==sel)p.classList.add("dim");});
+sel.classList.add("zoom");
+}
+
+function reset(){
+document.querySelectorAll(".photo").forEach(p=>p.classList.remove("dim","zoom"));
+}
+
+/* Journey */
+function showJourney(){
+journey.style.display="block";
+journey.classList.add("heartbeat");
+setTimeout(()=>journey.style.opacity="1",100);
+
+const text=`Jan 1, 2023 — The day everything began.
+
+Through distance, chaos, growth and challenges —
+we chose each other every single day.
+
+Less meetings.
+Busy year.
+Interference.
+Misunderstandings.
+
+But we survived.
+We grew.
+We stayed.
+
+This is intentional love.
+And I still choose you.
+Forever. ♾️❤️`;
+
+let i=0;
+journeyText.innerHTML="";
+function type(){
+if(i<text.length){
+if(text.charAt(i)=="\n"){
+journeyText.innerHTML+="<br>";
+}else{
+journeyText.innerHTML+=text.charAt(i);
+}
+i++;
+setTimeout(type,25);
+}
+}
+type();
+}
+
+/* Minimize */
+toggleBtn.addEventListener("click", function(){
+let content=document.getElementById("journeyContent");
+if(content.style.display==="none"){
+content.style.display="block";
+toggleBtn.innerHTML="—";
+}else{
+content.style.display="none";
+toggleBtn.innerHTML="+";
+}
 });
 
-/* Your remaining original functions stay unchanged below */
+/* Counter */
+function startCounter(){
+const startDate=new Date("Jan 1, 2023 00:00:00").getTime();
+setInterval(()=>{
+let now=new Date().getTime();
+let diff=now-startDate;
 
+let years=Math.floor(diff/(1000*60*60*24*365));
+diff-=years*(1000*60*60*24*365);
+let months=Math.floor(diff/(1000*60*60*24*30));
+diff-=months*(1000*60*60*24*30);
+let days=Math.floor(diff/(1000*60*60*24));
+diff-=days*(1000*60*60*24);
+let hours=Math.floor(diff/(1000*60*60));
+diff-=hours*(1000*60*60);
+let minutes=Math.floor(diff/(1000*60));
+diff-=minutes*(1000*60);
+let seconds=Math.floor(diff/1000);
+
+counter.innerHTML=
+years+"y : "+months+"m : "+days+"d : "+
+hours+"h : "+minutes+"m : "+seconds+"s ❤️";
+
+},1000);
+}
+
+});
 </script>
-</body>
-</html>
