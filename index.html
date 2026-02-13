@@ -6,6 +6,8 @@
 <title>Gigglu ❤️ Forever</title>
 
 <style>
+*{touch-action:manipulation;}
+
 body{
 margin:0;
 overflow:hidden;
@@ -17,12 +19,6 @@ text-align:center;
 
 /* Galaxy */
 canvas{
-position:fixed;
-top:0;
-left:0;
-z-index:-5;
-pointer-events:none;
-}canvas{
 position:fixed;
 top:0;
 left:0;
@@ -41,8 +37,10 @@ display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-z-index:5;
+z-index:10;
 }
+
+#mainSection{z-index:20;}
 
 /* Buttons */
 button{
@@ -95,7 +93,7 @@ font-size:20px;
 font-weight:bold;
 opacity:0;
 transition:opacity 0.3s;
-z-index:20;
+z-index:25;
 }
 
 /* Photos */
@@ -106,12 +104,12 @@ height:110px;
 object-fit:cover;
 border-radius:12px;
 transition:all 0.4s ease;
-z-index:2;
+z-index:5;
 }
 .dim{opacity:0.15 !important;}
 .zoom{
 transform:scale(2.5);
-z-index:50 !important;
+z-index:100 !important;
 box-shadow:0 0 40px white;
 }
 
@@ -123,7 +121,7 @@ left:50%;
 transform:translate(-50%,-50%);
 width:160px;
 height:160px;
-z-index:5;
+z-index:6;
 display:none;
 pointer-events:none;
 }
@@ -150,7 +148,7 @@ padding:25px;
 font-size:17px;
 line-height:1.8;
 display:none;
-z-index:10;
+z-index:30;
 opacity:0;
 transition:opacity 1.5s ease;
 background:rgba(0,0,0,0.75);
@@ -164,7 +162,7 @@ position:absolute;
 bottom:20px;
 width:100%;
 font-size:18px;
-z-index:10;
+z-index:30;
 }
 </style>
 </head>
@@ -246,27 +244,28 @@ c.style.height="6px";
 c.style.background=["#ff2e63","#fff","#ffcc00"][Math.floor(Math.random()*3)];
 c.style.left=Math.random()*100+"vw";
 c.style.top=Math.random()*100+"vh";
-c.style.zIndex="30";
+c.style.zIndex="200";
 document.body.appendChild(c);
 c.animate([{transform:"translateY(0)",opacity:1},{transform:"translateY(200px)",opacity:0}],{duration:1500});
 setTimeout(()=>c.remove(),1500);
 }
 }
 
-/* Photos */
+/* Launch Photos */
 function launchPhotos(){
 for(let i=1;i<=38;i++){
 let img=document.createElement("img");
 img.src="photo"+i+".jpg";
 img.classList.add("photo");
 document.body.appendChild(img);
-img.onmouseenter=()=>focus(img);
-img.onmouseleave=reset;
 img.ontouchstart=()=>focus(img);
 img.ontouchend=reset;
+img.onmouseenter=()=>focus(img);
+img.onmouseleave=reset;
 }
 setTimeout(arrangePhotos,500);
 }
+
 function arrangePhotos(){
 let photos=document.querySelectorAll(".photo");
 let cols=6;
@@ -277,6 +276,7 @@ img.style.left=(i%cols)*spacingX+"px";
 img.style.top=Math.floor(i/cols)*spacingY+"px";
 });
 }
+
 function focus(sel){
 document.querySelectorAll(".photo").forEach(p=>{if(p!==sel)p.classList.add("dim");});
 sel.classList.add("zoom");
@@ -284,32 +284,6 @@ sel.classList.add("zoom");
 function reset(){
 document.querySelectorAll(".photo").forEach(p=>p.classList.remove("dim","zoom"));
 }
-
-/* NO logic */
-let noCount=0;
-const lines=["Birokto 🙄","Chup kore YES click koro 😒","Malkin YES ta click koro 😌"];
-noBtn.onclick=(e)=>{
-e.preventDefault();
-noCount++;
-if(noCount<8){
-noBtn.style.position="absolute";
-noBtn.style.left=Math.random()*80+"%";
-noBtn.style.top=Math.random()*80+"%";
-noMessage.innerHTML=lines[Math.floor(Math.random()*lines.length)];
-noMessage.style.opacity="1";
-setTimeout(()=>noMessage.style.opacity="0",2000);
-}else{
-document.body.classList.add("shake");
-crackSound.play();
-noBtn.classList.add("shatter");
-setTimeout(()=>{
-noBtn.style.display="none";
-yesBtn.classList.add("glow");
-noMessage.innerHTML="Please click YES for your SONDESH 😌🍬";
-noMessage.style.opacity="1";
-},600);
-}
-};
 
 /* Smooth Typewriter Journey */
 function showJourney(){
@@ -322,25 +296,7 @@ const text=`Jan 1, 2023 — The day everything began. ❤️
 Through long distance, busy schedules, stress, interference and chaos —
 we still chose each other.
 
-We didn’t meet often.
-We didn’t always have time.
-Some nights were silent.
-Some days were heavy.
-
-But even in distance — we stayed.
-Even in challenges — we grew.
-Even when the world interfered — we became stronger.
-
-Every argument deepened us.
-Every struggle matured us.
-Every moment apart made us value togetherness more.
-
-This isn’t temporary attraction.
-This is intentional love.
-
 And today… I still choose you.
-Again and again.
-
 Forever. ♾️❤️`;
 
 let i=0;
@@ -356,64 +312,16 @@ setTimeout(type,25);
 type();
 }
 
-/* Counter full */
+/* Counter */
 function startCounter(){
 const startDate=new Date("Jan 1, 2023 00:00:00").getTime();
 setInterval(()=>{
-let now=new Date().getTime();
-let diff=now-startDate;
-
-let years=Math.floor(diff/(1000*60*60*24*365));
-diff-=years*(1000*60*60*24*365);
-let months=Math.floor(diff/(1000*60*60*24*30));
-diff-=months*(1000*60*60*24*30);
-let days=Math.floor(diff/(1000*60*60*24));
-diff-=days*(1000*60*60*24);
-let hours=Math.floor(diff/(1000*60*60));
-diff-=hours*(1000*60*60);
-let minutes=Math.floor(diff/(1000*60));
-diff-=minutes*(1000*60);
-let seconds=Math.floor(diff/1000);
-let milliseconds=diff%1000;
-
-counter.innerHTML=
-years+"y "+months+"m "+days+"d "+
-hours+"h "+minutes+"m "+
-seconds+"s "+milliseconds+"ms ❤️";
-
-},10);
+let diff=new Date().getTime()-startDate;
+counter.innerHTML=Math.floor(diff/1000)+" seconds together ❤️";
+},1000);
 }
-
-/* Draggable */
-let drag=false,offX,offY;
-journey.onmousedown=e=>{
-drag=true;
-offX=e.clientX-journey.offsetLeft;
-offY=e.clientY-journey.offsetTop;
-};
-document.onmousemove=e=>{
-if(drag){
-journey.style.left=e.clientX-offX+"px";
-journey.style.top=e.clientY-offY+"px";
-}
-};
-document.onmouseup=()=>drag=false;
-
-journey.ontouchstart=e=>{
-drag=true;
-let t=e.touches[0];
-offX=t.clientX-journey.offsetLeft;
-offY=t.clientY-journey.offsetTop;
-};
-document.ontouchmove=e=>{
-if(drag){
-let t=e.touches[0];
-journey.style.left=t.clientX-offX+"px";
-journey.style.top=t.clientY-offY+"px";
-}
-};
-document.ontouchend=()=>drag=false;
 
 </script>
+
 </body>
 </html>
