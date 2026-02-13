@@ -1,23 +1,234 @@
-<script>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gigglu ❤️ Forever</title>
 
-/* FIX: Define elements properly for mobile */
-const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
-const mainSection = document.getElementById("mainSection");
-const noMessage = document.getElementById("noMessage");
-const journey = document.getElementById("journey");
-const journeyText = document.getElementById("journeyText");
-const toggleBtn = document.getElementById("toggleBtn");
-const counter = document.getElementById("counter");
-const music = document.getElementById("music");
-const diamondContainer = document.getElementById("diamondContainer");
+<style>
+*{touch-action:manipulation;}
+
+body{
+margin:0;
+overflow:hidden;
+background:black;
+font-family:Arial,sans-serif;
+color:white;
+text-align:center;
+}
+
+/* Galaxy */
+canvas{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:0;
+pointer-events:none;
+}
+
+/* Section */
+.section{
+position:relative;
+width:100%;
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:10;
+}
+
+/* Buttons */
+button{
+padding:12px 25px;
+border-radius:30px;
+border:none;
+font-size:16px;
+cursor:pointer;
+margin:10px;
+background:#ff2e63;
+color:white;
+transition:0.3s;
+}
+
+/* YES Glow */
+@keyframes glowYes{
+0%{box-shadow:0 0 10px #ff2e63;}
+100%{box-shadow:0 0 40px #ff2e63,0 0 80px #ff2e63;}
+}
+.glow{
+animation:glowYes 1s infinite alternate;
+transform:scale(1.2);
+}
+
+/* Shake */
+@keyframes shake{
+0%{transform:translate(0);}
+20%{transform:translate(-10px,5px);}
+40%{transform:translate(10px,-5px);}
+60%{transform:translate(-10px,5px);}
+80%{transform:translate(10px,-5px);}
+100%{transform:translate(0);}
+}
+.shake{animation:shake 0.5s;}
+
+/* Shatter */
+@keyframes shatter{
+0%{transform:scale(1);opacity:1;}
+100%{transform:scale(0) rotate(45deg);opacity:0;}
+}
+.shatter{animation:shatter 0.6s forwards;}
+
+/* Floating Bengali text */
+#noMessage{
+position:absolute;
+top:65%;
+left:50%;
+transform:translateX(-50%);
+font-size:20px;
+font-weight:bold;
+opacity:0;
+transition:opacity 0.4s;
+z-index:50;
+}
+
+/* Photos */
+.photo{
+position:absolute;
+width:110px;
+height:110px;
+object-fit:cover;
+border-radius:12px;
+transition:all 0.4s ease;
+z-index:5;
+}
+.dim{opacity:0.15 !important;}
+.zoom{
+transform:scale(2.5);
+z-index:100 !important;
+box-shadow:0 0 40px white;
+}
+
+/* Diamond */
+#diamondContainer{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:160px;
+height:160px;
+z-index:6;
+display:none;
+pointer-events:none;
+}
+.diamond{
+width:150px;
+height:150px;
+background:linear-gradient(145deg,#ffffff,#cfcfff);
+clip-path:polygon(50% 0%,100% 35%,80% 100%,20% 100%,0% 35%);
+animation:spin 6s linear infinite;
+}
+@keyframes spin{
+0%{transform:rotateY(0deg) rotateX(0deg);}
+100%{transform:rotateY(360deg) rotateX(360deg);}
+}
+
+/* Journey */
+#journey{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:85%;
+max-width:600px;
+padding:25px;
+display:none;
+z-index:30;
+opacity:0;
+transition:opacity 1s ease;
+background:rgba(0,0,0,0.85);
+border-radius:20px;
+cursor:grab;
+overflow:hidden;
+}
+
+/* Heartbeat */
+@keyframes heartbeat{
+0%{transform:scale(1);}
+25%{transform:scale(1.02);}
+50%{transform:scale(1);}
+75%{transform:scale(1.02);}
+100%{transform:scale(1);}
+}
+.heartbeat{
+animation:heartbeat 1.2s infinite;
+}
+
+#journeyHeader{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+#toggleBtn{
+background:#444;
+padding:5px 10px;
+border-radius:10px;
+font-size:14px;
+}
+
+#counter{
+position:absolute;
+bottom:20px;
+width:100%;
+font-size:18px;
+z-index:40;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="section" id="mainSection">
+<h1>Will You Be My Valentine, Gigglu? ❤️</h1>
+<button id="yesBtn">YES 💘</button>
+<button id="noBtn">No 😒</button>
+<div id="noMessage"></div>
+</div>
+
+<div id="diamondContainer">
+<div class="diamond"></div>
+</div>
+
+<div id="journey">
+<div id="journeyHeader">
+<h3>Our Journey ❤️</h3>
+<button id="toggleBtn">—</button>
+</div>
+<div id="journeyContent">
+<p id="journeyText"></p>
+</div>
+</div>
+
+<div id="counter"></div>
+
+<audio id="music">
+<source src="romantic.mp3" type="audio/mp3">
+</audio>
+
+<script>
 
 /* YES */
 yesBtn.onclick=()=>{
 mainSection.style.display="none";
 yesBtn.classList.add("glow");
 confetti();
-music.play().catch(()=>{}); // mobile safe
+music.play();
 launchPhotos();
 diamondContainer.style.display="block";
 showJourney();
@@ -101,7 +312,6 @@ function focus(sel){
 document.querySelectorAll(".photo").forEach(p=>{if(p!==sel)p.classList.add("dim");});
 sel.classList.add("zoom");
 }
-
 function reset(){
 document.querySelectorAll(".photo").forEach(p=>p.classList.remove("dim","zoom"));
 }
@@ -217,3 +427,5 @@ hours+"h : "+minutes+"m : "+seconds+"s ❤️";
 }
 
 </script>
+</body>
+</html>
