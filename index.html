@@ -1,8 +1,6 @@
 <script>
 
-/* Wait until page fully loads */
-window.onload = function(){
-
+/* FIX: Define elements properly for mobile */
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
 const mainSection = document.getElementById("mainSection");
@@ -15,7 +13,7 @@ const music = document.getElementById("music");
 const diamondContainer = document.getElementById("diamondContainer");
 
 /* YES */
-yesBtn.onclick = function(){
+yesBtn.onclick=()=>{
 mainSection.style.display="none";
 yesBtn.classList.add("glow");
 confetti();
@@ -38,11 +36,7 @@ c.style.left=Math.random()*100+"vw";
 c.style.top=Math.random()*100+"vh";
 c.style.zIndex="200";
 document.body.appendChild(c);
-c.animate(
-[{transform:"translateY(0)",opacity:1},
- {transform:"translateY(300px)",opacity:0}],
-{duration:2000}
-);
+c.animate([{transform:"translateY(0)",opacity:1},{transform:"translateY(300px)",opacity:0}],{duration:2000});
 setTimeout(()=>c.remove(),2000);
 }
 }
@@ -56,10 +50,9 @@ const lines=[
 "Malkin YES ta click koro 😌"
 ];
 
-noBtn.onclick = function(e){
+noBtn.onclick=(e)=>{
 e.preventDefault();
 noCount++;
-
 if(noCount<8){
 noBtn.style.position="absolute";
 noBtn.style.left=Math.random()*80+"%";
@@ -98,7 +91,6 @@ let photos=document.querySelectorAll(".photo");
 let cols=6;
 let spacingX=window.innerWidth/cols;
 let spacingY=window.innerHeight/7;
-
 photos.forEach((img,i)=>{
 img.style.left=(i%cols)*spacingX+"px";
 img.style.top=Math.floor(i/cols)*spacingY+"px";
@@ -106,16 +98,12 @@ img.style.top=Math.floor(i/cols)*spacingY+"px";
 }
 
 function focus(sel){
-document.querySelectorAll(".photo").forEach(p=>{
-if(p!==sel)p.classList.add("dim");
-});
+document.querySelectorAll(".photo").forEach(p=>{if(p!==sel)p.classList.add("dim");});
 sel.classList.add("zoom");
 }
 
 function reset(){
-document.querySelectorAll(".photo").forEach(p=>{
-p.classList.remove("dim","zoom");
-});
+document.querySelectorAll(".photo").forEach(p=>p.classList.remove("dim","zoom"));
 }
 
 /* Journey */
@@ -144,7 +132,6 @@ Forever. ♾️❤️`;
 
 let i=0;
 journeyText.innerHTML="";
-
 function type(){
 if(i<text.length){
 if(text.charAt(i)=="\n"){
@@ -160,7 +147,7 @@ type();
 }
 
 /* Minimize */
-toggleBtn.onclick = function(){
+toggleBtn.onclick=()=>{
 let content=document.getElementById("journeyContent");
 if(content.style.display==="none"){
 content.style.display="block";
@@ -171,10 +158,41 @@ toggleBtn.innerHTML="+";
 }
 };
 
+/* Draggable */
+let drag=false,offX,offY;
+journey.onmousedown=e=>{
+drag=true;
+offX=e.clientX-journey.offsetLeft;
+offY=e.clientY-journey.offsetTop;
+};
+document.onmousemove=e=>{
+if(drag){
+journey.style.left=e.clientX-offX+"px";
+journey.style.top=e.clientY-offY+"px";
+journey.style.transform="translate(0,0)";
+}
+};
+document.onmouseup=()=>drag=false;
+
+journey.ontouchstart=e=>{
+drag=true;
+let t=e.touches[0];
+offX=t.clientX-journey.offsetLeft;
+offY=t.clientY-journey.offsetTop;
+};
+document.ontouchmove=e=>{
+if(drag){
+let t=e.touches[0];
+journey.style.left=t.clientX-offX+"px";
+journey.style.top=t.clientY-offY+"px";
+journey.style.transform="translate(0,0)";
+}
+};
+document.ontouchend=()=>drag=false;
+
 /* Counter */
 function startCounter(){
 const startDate=new Date("Jan 1, 2023 00:00:00").getTime();
-
 setInterval(()=>{
 let now=new Date().getTime();
 let diff=now-startDate;
@@ -191,13 +209,11 @@ let minutes=Math.floor(diff/(1000*60));
 diff-=minutes*(1000*60);
 let seconds=Math.floor(diff/1000);
 
-counter.innerHTML =
+counter.innerHTML=
 years+"y : "+months+"m : "+days+"d : "+
 hours+"h : "+minutes+"m : "+seconds+"s ❤️";
 
 },1000);
 }
-
-}; // END window.onload
 
 </script>
