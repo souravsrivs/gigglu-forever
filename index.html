@@ -2,17 +2,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gigglu ❤️ Forever</title>
 
 <style>
 *{
 touch-action:manipulation;
 -webkit-tap-highlight-color: transparent;
-}
-
-html,body{
-height:100%;
 }
 
 body{
@@ -22,6 +18,7 @@ background:black;
 font-family:Arial,sans-serif;
 color:white;
 text-align:center;
+position:relative;
 }
 
 /* Galaxy */
@@ -39,12 +36,12 @@ pointer-events:none;
 .section{
 position:relative;
 width:100%;
-min-height:100vh;
+height:100vh;
 display:flex;
 flex-direction:column;
 justify-content:center;
 align-items:center;
-z-index:10;
+z-index:100; /* Increased */
 }
 
 /* Buttons */
@@ -58,8 +55,8 @@ margin:10px;
 background:#ff2e63;
 color:white;
 transition:0.3s;
-z-index:20;
 position:relative;
+z-index:200; /* VERY IMPORTANT */
 }
 
 /* YES Glow */
@@ -100,7 +97,7 @@ font-size:20px;
 font-weight:bold;
 opacity:0;
 transition:opacity 0.4s;
-z-index:50;
+z-index:300;
 }
 
 /* Photos */
@@ -161,7 +158,6 @@ background:rgba(0,0,0,0.85);
 border-radius:20px;
 cursor:grab;
 overflow:hidden;
-touch-action:none;
 }
 
 /* Heartbeat */
@@ -195,7 +191,7 @@ position:absolute;
 bottom:20px;
 width:100%;
 font-size:18px;
-z-index:40;
+z-index:400;
 }
 </style>
 </head>
@@ -233,19 +229,66 @@ z-index:40;
 
 <script>
 
-/* Mobile canvas resize fix */
-function resizeCanvas(){
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-}
-window.addEventListener("resize",resizeCanvas);
+/* 🔥 IMPORTANT MOBILE FIX */
+document.addEventListener("DOMContentLoaded", function(){
 
-/* Prevent iOS rubber band scroll */
-document.body.addEventListener("touchmove",function(e){
-if(e.target === document.body){
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const mainSection = document.getElementById("mainSection");
+const noMessage = document.getElementById("noMessage");
+const journey = document.getElementById("journey");
+const journeyText = document.getElementById("journeyText");
+const toggleBtn = document.getElementById("toggleBtn");
+const counter = document.getElementById("counter");
+const music = document.getElementById("music");
+const diamondContainer = document.getElementById("diamondContainer");
+
+/* YES */
+yesBtn.addEventListener("click", function(){
+mainSection.style.display="none";
+yesBtn.classList.add("glow");
+confetti();
+music.play();
+launchPhotos();
+diamondContainer.style.display="block";
+showJourney();
+startCounter();
+});
+
+/* NO */
+let noCount=0;
+const lines=[
+"Birokto 🙄",
+"Chup kore YES click koro 😒",
+"Eiii baal YES click koro 😏",
+"Malkin YES ta click koro 😌"
+];
+
+noBtn.addEventListener("click", function(e){
 e.preventDefault();
+noCount++;
+if(noCount<8){
+noBtn.style.position="absolute";
+noBtn.style.left=Math.random()*80+"%";
+noBtn.style.top=Math.random()*80+"%";
+noMessage.innerHTML=lines[Math.floor(Math.random()*lines.length)];
+noMessage.style.opacity="1";
+setTimeout(()=>noMessage.style.opacity="0",2000);
+}else{
+document.body.classList.add("shake");
+noBtn.classList.add("shatter");
+setTimeout(()=>{
+noBtn.style.display="none";
+noMessage.innerHTML="Please click YES for Sondesh 🍬";
+noMessage.style.opacity="1";
+},600);
 }
-},{passive:false});
+});
 
-/* Everything below remains SAME as your original logic */
+});
 
+/* Your remaining original functions stay unchanged below */
+
+</script>
+</body>
+</html>
