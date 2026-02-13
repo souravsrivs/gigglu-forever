@@ -1,6 +1,7 @@
 <script>
 
-document.addEventListener("DOMContentLoaded", function(){
+/* Wait until page fully loads */
+window.onload = function(){
 
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
@@ -14,7 +15,7 @@ const music = document.getElementById("music");
 const diamondContainer = document.getElementById("diamondContainer");
 
 /* YES */
-yesBtn.addEventListener("click", function(){
+yesBtn.onclick = function(){
 mainSection.style.display="none";
 yesBtn.classList.add("glow");
 confetti();
@@ -23,7 +24,7 @@ launchPhotos();
 diamondContainer.style.display="block";
 showJourney();
 startCounter();
-});
+};
 
 /* Confetti */
 function confetti(){
@@ -37,7 +38,11 @@ c.style.left=Math.random()*100+"vw";
 c.style.top=Math.random()*100+"vh";
 c.style.zIndex="200";
 document.body.appendChild(c);
-c.animate([{transform:"translateY(0)",opacity:1},{transform:"translateY(300px)",opacity:0}],{duration:2000});
+c.animate(
+[{transform:"translateY(0)",opacity:1},
+ {transform:"translateY(300px)",opacity:0}],
+{duration:2000}
+);
 setTimeout(()=>c.remove(),2000);
 }
 }
@@ -51,9 +56,10 @@ const lines=[
 "Malkin YES ta click koro 😌"
 ];
 
-noBtn.addEventListener("click", function(e){
+noBtn.onclick = function(e){
 e.preventDefault();
 noCount++;
+
 if(noCount<8){
 noBtn.style.position="absolute";
 noBtn.style.left=Math.random()*80+"%";
@@ -70,7 +76,7 @@ noMessage.innerHTML="Please click YES for Sondesh 🍬";
 noMessage.style.opacity="1";
 },600);
 }
-});
+};
 
 /* Photos */
 function launchPhotos(){
@@ -92,6 +98,7 @@ let photos=document.querySelectorAll(".photo");
 let cols=6;
 let spacingX=window.innerWidth/cols;
 let spacingY=window.innerHeight/7;
+
 photos.forEach((img,i)=>{
 img.style.left=(i%cols)*spacingX+"px";
 img.style.top=Math.floor(i/cols)*spacingY+"px";
@@ -99,12 +106,16 @@ img.style.top=Math.floor(i/cols)*spacingY+"px";
 }
 
 function focus(sel){
-document.querySelectorAll(".photo").forEach(p=>{if(p!==sel)p.classList.add("dim");});
+document.querySelectorAll(".photo").forEach(p=>{
+if(p!==sel)p.classList.add("dim");
+});
 sel.classList.add("zoom");
 }
 
 function reset(){
-document.querySelectorAll(".photo").forEach(p=>p.classList.remove("dim","zoom"));
+document.querySelectorAll(".photo").forEach(p=>{
+p.classList.remove("dim","zoom");
+});
 }
 
 /* Journey */
@@ -133,6 +144,7 @@ Forever. ♾️❤️`;
 
 let i=0;
 journeyText.innerHTML="";
+
 function type(){
 if(i<text.length){
 if(text.charAt(i)=="\n"){
@@ -148,7 +160,7 @@ type();
 }
 
 /* Minimize */
-toggleBtn.addEventListener("click", function(){
+toggleBtn.onclick = function(){
 let content=document.getElementById("journeyContent");
 if(content.style.display==="none"){
 content.style.display="block";
@@ -157,11 +169,12 @@ toggleBtn.innerHTML="—";
 content.style.display="none";
 toggleBtn.innerHTML="+";
 }
-});
+};
 
 /* Counter */
 function startCounter(){
 const startDate=new Date("Jan 1, 2023 00:00:00").getTime();
+
 setInterval(()=>{
 let now=new Date().getTime();
 let diff=now-startDate;
@@ -178,12 +191,13 @@ let minutes=Math.floor(diff/(1000*60));
 diff-=minutes*(1000*60);
 let seconds=Math.floor(diff/1000);
 
-counter.innerHTML=
+counter.innerHTML =
 years+"y : "+months+"m : "+days+"d : "+
 hours+"h : "+minutes+"m : "+seconds+"s ❤️";
 
 },1000);
 }
 
-});
+}; // END window.onload
+
 </script>
